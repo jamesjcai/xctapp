@@ -4,19 +4,17 @@ import scTenifoldXct as sct
 import streamlit as st
 from tempfile import NamedTemporaryFile
 from datetime import datetime
+from utils import *
 
 
 KEYS = ["data", "data_obs", "sender", "receiver", "rebuild_on"]
 DATE = datetime.now().strftime("%m%d%y")
-def check_values_not_none(dictionary, keys):
-    return all(key in dictionary and dictionary[key] is not None for key in keys)
-
-@st.cache_data
-def convert_df(df):
-    return df.to_csv().encode('utf-8')
 
 
 # load data
+st.header("🤖 scTenifold for single-sample analysis")
+st.info("This is a beta version UI for [scTenifoldXct](https://github.com/cailab-tamu/scTenifoldXct) project")
+
 st.write("Upload your h5ad file")
 uploaded_file = st.file_uploader("File upload", type="h5ad")
 if uploaded_file is not None:
@@ -85,7 +83,7 @@ if uploaded_file is not None:
 
         if check_values_not_none(st.session_state, KEYS):
             # run
-            run_ = st.button("Click and run scTenifoldXct")
+            run_ = st.button("Click and run scTenifoldXct", type="primary")
             complete_ = False
             if run_:
                 with st.spinner("Running..."):
@@ -97,8 +95,7 @@ if uploaded_file is not None:
                                             GRN_file_dir = "GRNs",  # folder path to GRNs
                                             verbose = True, # whether to verbose the processing
                                             n_cpus = st.session_state["n_cpu"]) # CPU multiprocessing, -1 to use all
-                    emb = xct.get_embeds(train = True) # Manifold alignment to project data to low-dimensional embeddings
-                    result_df = xct.null_test()
+                    result_df = get_xct_result(xct)
                     complete_ = True
                 st.success("Done!")
             if complete_:  
@@ -110,6 +107,16 @@ if uploaded_file is not None:
                     mime="text/csv",
                 )
 
+with st.expander("Implementing Tips"):
+    st.write('''
+    - Training may take several minutes
+    - Check our [paper](https://doi.org/10.1016/j.cels.2023.01.004) and [repository](https://github.com/cailab-tamu/scTenifoldXct) for more information
+    ''')
+
+st.divider()
+st.write('''
+(c) 2024 CaiLab, Texas A&M University
+''')
 # st.write("session_state:", st.session_state) # debug
 
 # streamlit run xctapp.py
