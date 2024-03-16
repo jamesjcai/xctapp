@@ -83,9 +83,9 @@ if uploaded_file is not None:
 
         if check_values_not_none(st.session_state, KEYS):
             # run
-            run_ = st.button("Click and run scTenifoldXct", type="primary")
+            run_1 = st.button("Click and run scTenifoldXct", key="run_1", type="primary")
             complete_ = False
-            if run_:
+            if run_1:
                 with st.spinner("Running..."):
                     xct = sct.scTenifoldXct(data = st.session_state["data"], # an AnnData 
                                             source_celltype = st.session_state["sender"], # sender cell type

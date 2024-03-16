@@ -96,8 +96,8 @@ for i, col in enumerate(cols):
 
 if "item1_complete" in st.session_state and "item2_complete" in st.session_state:
     complete_ = False
-    run_ = st.button("Click and run scTenifoldXct diff", key="run", type="primary")
-    if run_:
+    run_2 = st.button("Click and run scTenifoldXct diff", key="run_2", type="primary")
+    if run_2:
         with st.spinner("Running..."):
             xcts_pairs_diff = get_merge_xct_result(st.session_state[f"item1_xct_object"], st.session_state[f"item2_xct_object"])
             complete_ = True
